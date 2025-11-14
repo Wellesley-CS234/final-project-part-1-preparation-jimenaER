@@ -1,61 +1,77 @@
 import streamlit as st
 import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import plotly.express as px
 
 # The actual page content is executed here by Streamlit
-st.title("⚽ Student A: Sports Results Analysis")
+st.title("Climate Article in Spanish Analysis")
 st.markdown("---")
 
 # Retrieve shared data from the Home page's session state
-if 'student_data' not in st.session_state or st.session_state['student_data']['st07_df'].empty:
-    st.warning("Data not loaded. Please ensure the main Home Page ran successfully and the data files exist.")
-else:
-    df = st.session_state['student_data']['st07_df']
+df = pd.read_csv("data/st8_data.csv")
 
     # --- Student Introductory Section ---
-    st.header("1. Introduction and Project Goal")
-    st.markdown("""
-        **Data Description:** This dataset contains **sports game results** for five fictional teams over two seasons, including scores, attendance figures, and the final result (Win, Loss, Draw).
-        
-        **Question:** How does **home team performance** vary across different teams, and what is the relationship between the game result and **audience attendance**?
-        
-        **Interaction:** Use the selection box below to choose a specific team and view its key performance indicators (KPIs) and attendance metrics.
+st.header("1. Introduction and Project Goal")
+st.markdown("""
+        **Data Description:** \n
+        This dataset contains results from **2020-04-22 to 2020-09-14**\n
+        for the top 25 contries where wikipedia articles about climate change in spanish where accessed, 
+        in comparison to all other languages from those respective countries. Data was extracted from
+        DPDP Wikepedia files. Languages where matched by key matching the first two characters of wiki site names, and labeled as spanish
+        or other languages for filtering. Then data was grouped by country and aggregated by language. Results are measure by views.
+                
+        **Question:**  What is the relation of **spanish articles** accessed in comparison to other languages in each country?
+                
+        **Interaction:** The selection box below has the following options:\n
+                
+                (Hover over both data frames to see more detailed values of results)
+
+                - Language comparisons : Allows you to see the data set of spansih and Other language comparisons \n
+                - Spanish views in top 25 Countries : Allows you to see the data set of only the spanish views in the top 25 countries
     """)
+
+st.markdown("---")
+
+options=["Language Comparisons","Spanish Views in Top 25 Countries"]
+selection=st.selectbox("Select a data frame",options)
+    
+#import and order data
+data=pd.read_csv("data/st8_data.csv")
+data=data.sort_values(by=['Country','views'], ascending=False)
+data=data.drop('Unnamed: 0', axis=1)
+#Get SD+- to order from higuest to lowest
+stdv_df=data.groupby('Country')['views'].std().reset_index().rename(columns={'views':'std_views'})
+sorted=stdv_df.sort_values(by='std_views',ascending=False)['Country'].tolist()
+
+data2=data[data['language_type']=='spanish']
+sorted2=data2.sort_values(by='views (log)',ascending=False)['Country'].tolist()
+
+
+if selection == options[0]:
+#Making plot
+    st.subheader(options[0])
+    plt.figure(figsize=(20,6))
+
+    figure= px.bar(data, x='Country',y='views (log)',color='language_type',hover_data=['views'],category_orders={"Country": sorted})
+    figure.update_layout(barmode='group',xaxis_tickangle=90, height=600, width=1000)
+    st.plotly_chart(figure)
+
     st.markdown("---")
-    
-    # --- Analysis Controls (Moved from Sidebar to Main Page) ---
-    col_control, col_spacer = st.columns([1, 3])
-    with col_control:
-        team_filter = st.selectbox(
-            "Select Team to Analyze (Home Games Only):", 
-            df['Home_Team'].unique()
-        )
-    
-    # Filter data for the selected team (as Home Team)
-    team_df = df[df['Home_Team'] == team_filter]
-    
-    # --- Analysis Content ---
-    if team_df.empty:
-        st.info(f"No home games found for the team '{team_filter}' in the dataset to analyze.")
-    else:
-        st.subheader(f"2. Performance Metrics for the {team_filter}")
-        
-        col1, col2 = st.columns(2)
-        
-        # Win/Loss Count
-        result_counts = team_df['Result'].value_counts()
-        
-        with col1:
-            st.metric(
-                label="Total Home Games Analyzed", 
-                value=len(team_df)
-            )
-            st.dataframe(result_counts.to_frame(), use_container_width=True)
-            
-        # Average Attendance
-        with col2:
-            avg_attendance = team_df['Attendance'].mean()
-            st.metric(
-                label="Average Home Game Attendance", 
-                value=f"{avg_attendance:,.0f}"
-            )
-            st.bar_chart(team_df.set_index('Game_ID')['Attendance'])
+    st.subheader("Data Snippet")
+
+    st.write(data[:5])
+
+elif selection== options[1]:
+    st.subheader(options[1])
+
+    figure= px.bar(data2, x='Country',y='views (log)',color='Country',hover_data=['views'],category_orders={"Country": sorted2})
+    figure.update_layout(xaxis_tickangle=90, height=600, width=1000)
+
+    st.plotly_chart(figure)
+
+    st.markdown("---")
+    st.subheader("Data Snippet")
+    st.write(data2[:5])
+
+
