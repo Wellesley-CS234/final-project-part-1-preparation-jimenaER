@@ -10,7 +10,7 @@ import sys
 # ⚠️ CHANGE 1: Set the key name for YOUR data (e.g., 'st05_df', 'st12_df', etc.)
 # IMPORTANT: This key MUST match the 'stN_df' key used in the main Home Page
 # and accessed by your analysis file.
-STUDENT_DATA_KEY = 'st08_df' 
+STUDENT_DATA_KEY = 'st8_df' 
 
 # ⚠️ CHANGE 2: Set the file path to YOUR Streamlit page (e.g., 'pages/07_⚽_Sports_Analysis.py')
 STUDENT_PAGE_PATH = 'pages/08_Climate_Articles_in_Spanish_Analysis.py' 
@@ -25,7 +25,8 @@ def load_student_data(key_name):
     
     # NEW LOGIC: Convert the session state key (e.g., 'st7_df') to the filename (e.g., 'st07_data.csv')
     # This ensures the student page finds the correct key, but the loader finds the correct file.
-    file_root = key_name.replace('_df', '_data') 
+    file_root = key_name.replace('_df', '_data')
+
     data_path = os.path.join('data', f"{file_root}.csv")
     
     if os.path.exists(data_path):
