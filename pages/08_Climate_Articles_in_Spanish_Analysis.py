@@ -9,28 +9,32 @@ st.title("🌎 Climate Articles in Spanish Language Analysis")
 st.markdown("---")
 
 # Retrieve shared data from the Home page's session state
-df = pd.read_csv("data/st8_data.csv")
+if 'student_data' not in st.session_state or st.session_state['student_data']['st8_df'].empty:
+    st.warning("Data not loaded. Please ensure the main Home Page ran successfully and the data files exist.")
+else:
 
-    # --- Student Introductory Section ---
-st.header("1. Introduction and Project Goal")
-st.markdown("""
-        ⚙️**Data Description:** \n
-        This dataset contains results from **2020-04-22 to 2020-09-14**\n
-        for the top 25 contries where wikipedia articles about climate change in spanish where accessed, 
-        in comparison to all other languages from those respective countries. Data was extracted from
-        DPDP Wikepedia files. Languages where matched by key matching the first two characters of wiki site names, and labeled as spanish
-        or other languages for filtering. Then data was grouped by country and aggregated by language. Results are measure by views.
-                
-        ❓**Question:**  What is the relation of **spanish articles** accessed in comparison to other languages in each country?
-                
-        🖱️**Interaction:** The selection box below has the following options:\n
-                
-                (Hover over both data frames to see more detailed values of results)
+    df = st.session_state['student_data']['st8_df']
+        
+        # --- Student Introductory Section ---
+    st.header("1. Introduction and Project Goal")
+    st.markdown("""
+            ⚙️**Data Description:** \n
+            This dataset contains results from **2020-04-22 to 2020-09-14**\n
+            for the top 25 contries where wikipedia articles about climate change in spanish where accessed, 
+            in comparison to all other languages from those respective countries. Data was extracted from
+            DPDP Wikepedia files. Languages where matched by key matching the first two characters of wiki site names, and labeled as spanish
+            or other languages for filtering. Then data was grouped by country and aggregated by language. Results are measure by views.
+                    
+            ❓**Question:**  What is the relation of **spanish articles** accessed in comparison to other languages in each country?
+                    
+            🖱️**Interaction:** The selection box below has the following options:\n
+                    
+                    (Hover over both data frames to see more detailed values of results)
 
-                ➡️ Language comparisons : Allows you to see the data set of spansih and Other language comparisons \n
-                ➡️ Spanish views in top 25 Countries : Allows you to see the data set of only the spanish views in the top 25 countries
+                    ➡️ Language comparisons : Allows you to see the data set of spansih and Other language comparisons \n
+                    ➡️ Spanish views in top 25 Countries : Allows you to see the data set of only the spanish views in the top 25 countries
     """)
-
+    
 st.markdown("---")
 st.header("2. Data figures")
 
