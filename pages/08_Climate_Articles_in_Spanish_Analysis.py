@@ -5,7 +5,7 @@ import seaborn as sns
 import plotly.express as px
 
 # The actual page content is executed here by Streamlit
-st.title("Climate Article in Spanish Analysis")
+st.title("🌎 Climate Articles in Spanish Language Analysis")
 st.markdown("---")
 
 # Retrieve shared data from the Home page's session state
@@ -14,24 +14,25 @@ df = pd.read_csv("data/st8_data.csv")
     # --- Student Introductory Section ---
 st.header("1. Introduction and Project Goal")
 st.markdown("""
-        **Data Description:** \n
+        ⚙️**Data Description:** \n
         This dataset contains results from **2020-04-22 to 2020-09-14**\n
         for the top 25 contries where wikipedia articles about climate change in spanish where accessed, 
         in comparison to all other languages from those respective countries. Data was extracted from
         DPDP Wikepedia files. Languages where matched by key matching the first two characters of wiki site names, and labeled as spanish
         or other languages for filtering. Then data was grouped by country and aggregated by language. Results are measure by views.
                 
-        **Question:**  What is the relation of **spanish articles** accessed in comparison to other languages in each country?
+        ❓**Question:**  What is the relation of **spanish articles** accessed in comparison to other languages in each country?
                 
-        **Interaction:** The selection box below has the following options:\n
+        🖱️**Interaction:** The selection box below has the following options:\n
                 
                 (Hover over both data frames to see more detailed values of results)
 
-                - Language comparisons : Allows you to see the data set of spansih and Other language comparisons \n
-                - Spanish views in top 25 Countries : Allows you to see the data set of only the spanish views in the top 25 countries
+                ➡️ Language comparisons : Allows you to see the data set of spansih and Other language comparisons \n
+                ➡️ Spanish views in top 25 Countries : Allows you to see the data set of only the spanish views in the top 25 countries
     """)
 
 st.markdown("---")
+st.header("2. Data figures")
 
 options=["Language Comparisons","Spanish Views in Top 25 Countries"]
 selection=st.selectbox("Select a data frame",options)
@@ -58,7 +59,7 @@ if selection == options[0]:
     st.plotly_chart(figure)
 
     st.markdown("---")
-    st.subheader("Data Snippet")
+    st.subheader("3. Data Snippet")
 
     st.write(data[:5])
 
@@ -71,7 +72,7 @@ elif selection== options[1]:
     st.plotly_chart(figure)
 
     st.markdown("---")
-    st.subheader("Data Snippet")
+    st.subheader("3. Data Snippet")
     st.write(data2[:5])
 
 
